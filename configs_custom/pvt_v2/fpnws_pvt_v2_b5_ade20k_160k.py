@@ -7,9 +7,9 @@ _base_ = [
 # model settings
 model = dict(
     type='EncoderDecoder',
-    pretrained='https://github.com/whai362/PVT/releases/download/v2/pvt_v2_b2.pth',
+    pretrained='https://github.com/whai362/PVT/releases/download/v2/pvt_v2_b5.pth',
     backbone=dict(
-        type='pvt_v2_b2',
+        type='pvt_v2_b5',
         style='pytorch'),
     neck=dict(in_channels=[64, 128, 320, 512]),
     decode_head=dict(num_classes=150))
