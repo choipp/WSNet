@@ -41,7 +41,7 @@ class DepthwiseSeparableASPPHeadWS(ASPPHead):
     """
 
     def __init__(self, c1_in_channels, c1_channels, **kwargs):
-        super(DepthwiseSeparableASPPHead, self).__init__(**kwargs)
+        super(DepthwiseSeparableASPPHeadWS, self).__init__(**kwargs)
         assert c1_in_channels >= 0
         self.aspp_modules = DepthwiseSeparableASPPModule(
             dilations=self.dilations,
