@@ -43,6 +43,7 @@ class DepthwiseSeparableASPPHeadWS(ASPPHead):
     def __init__(self, c1_in_channels, c1_channels, **kwargs):
         super(DepthwiseSeparableASPPHeadWS, self).__init__(**kwargs)
         assert c1_in_channels >= 0
+        self.c1_in_channels = c1_in_channels
         self.aspp_modules = DepthwiseSeparableASPPModule(
             dilations=self.dilations,
             in_channels=self.in_channels,
@@ -50,31 +51,17 @@ class DepthwiseSeparableASPPHeadWS(ASPPHead):
             conv_cfg=self.conv_cfg,
             norm_cfg=self.norm_cfg,
             act_cfg=self.act_cfg)
-        if c1_in_channels > 0:
-            self.c1_bottleneck = ConvModule(
-                c1_in_channels,
-                c1_channels,
-                1,
-                conv_cfg=self.conv_cfg,
+        self.conv = ConvModule(
+                in_channels=c1_in_channels,
+                out_channels=self.channels,
+                kernel_size=1,
+                stride=1,
                 norm_cfg=self.norm_cfg,
                 act_cfg=self.act_cfg)
-        else:
-            self.c1_bottleneck = None
-        self.sep_bottleneck = nn.Sequential(
-            DepthwiseSeparableConvModule(
-                self.channels + c1_channels,
-                self.channels,
-                3,
-                padding=1,
-                norm_cfg=self.norm_cfg,
-                act_cfg=self.act_cfg),
-            DepthwiseSeparableConvModule(
-                self.channels,
-                self.channels,
-                3,
-                padding=1,
-                norm_cfg=self.norm_cfg,
-                act_cfg=self.act_cfg))
+
+        self.weights_aspp = nn.Parameter(torch.ones(len(self.dilations) + 1, 1))
+        if c1_in_channels > 0:
+            self.weights_decode = nn.Parameter(torch.ones(2, 1))
 
     def forward(self, inputs):
         """Forward function."""
@@ -87,16 +74,19 @@ class DepthwiseSeparableASPPHeadWS(ASPPHead):
                 align_corners=self.align_corners)
         ]
         aspp_outs.extend(self.aspp_modules(x))
-        aspp_outs = torch.cat(aspp_outs, dim=1)
-        output = self.bottleneck(aspp_outs)
-        if self.c1_bottleneck is not None:
-            c1_output = self.c1_bottleneck(inputs[0])
+
+        output = 0
+        for idx in range(len(self.dilations) + 1):
+            output += torch.mul(self.weights_aspp[idx, :], aspp_outs[idx])
+
+        out = 0
+        if self.c1_in_channels > 0:
+            c1_output = self.conv(inputs[0])
             output = resize(
                 input=output,
                 size=c1_output.shape[2:],
                 mode='bilinear',
                 align_corners=self.align_corners)
-            output = torch.cat([output, c1_output], dim=1)
-        output = self.sep_bottleneck(output)
-        output = self.cls_seg(output)
+            out = torch.mul(self.weights_decode[0, :], c1_output) + torch.mul(self.weights_decode[1, :], output)
+        output = self.cls_seg(out)
         return output
