@@ -3,8 +3,8 @@ import argparse
 
 from mmcv import Config
 from mmcv.cnn import get_model_complexity_info
-
 from mmseg.models import build_segmentor
+from mmseg_custom import *
 
 
 def parse_args():
@@ -15,7 +15,7 @@ def parse_args():
         '--shape',
         type=int,
         nargs='+',
-        default=[2048, 1024],
+        default=[512, 512],
         help='input image size')
     args = parser.parse_args()
     return args
