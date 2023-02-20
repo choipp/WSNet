@@ -34,7 +34,7 @@ model = dict(
 
 # data
 # data = dict(samples_per_gpu=2)
-evaluation = dict(interval=1000, metric='mIoU', save_best='mIoU')
+evaluation = dict(interval=4000, metric='mIoU', save_best='mIoU')
 # train data: 2975... -> 4000?
 # checkpoint_config = dict(by_epoch=False, interval=8000)
 # optimizer
