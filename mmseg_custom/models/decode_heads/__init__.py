@@ -5,5 +5,7 @@ from .fpn_headws import FPNHeadWS
 from .sep_aspp_headws import DepthwiseSeparableASPPHeadWS
 from .ham_head import LightHamHead
 from .ham_headws import LightHamHeadWS
-
-__all__ = ['UPerHeadWS', 'FPNHeadWS', 'DepthwiseSeparableASPPHeadWS', 'LightHamHead', 'LightHamHeadWS']
+from .lawin_head import LAWINHead
+from .lawin_headws import LAWINHeadWS
+__all__ = ['UPerHeadWS', 'FPNHeadWS', 'DepthwiseSeparableASPPHeadWS', 'LightHamHead', 'LightHamHeadWS',
+           'LAWINHead', 'LAWINHeadWS' ]
