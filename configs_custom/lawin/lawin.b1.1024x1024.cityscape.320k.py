@@ -2,7 +2,7 @@ _base_ = [
     '../_base_/models/lawin.py',
     '../_base_/datasets/cityscapes_1024x1024_repeat.py',
     '../_base_/default_runtime.py',
-    '../_base_/schedules/schedule_160k_adamw.py'
+    '../_base_/schedules/schedule_320k_adamw.py'
 ]
 
 # model settings
