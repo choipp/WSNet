@@ -1,0 +1,1 @@
+from mmseg_custom.datasets.pipelines import *
