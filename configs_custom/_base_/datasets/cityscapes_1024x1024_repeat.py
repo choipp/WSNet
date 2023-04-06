@@ -1,6 +1,6 @@
 # dataset settings
 dataset_type = 'CityscapesDataset'
-data_root = '/opt/ml/input/data/'
+data_root = './data/cityscapes/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 crop_size = (1024, 1024)
@@ -32,8 +32,11 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=4,
-    workers_per_gpu=6,
+    # if using single gpu, please use 
+    # samples_per_gpu=4,
+    # workers_per_gpu=4,
+    samples_per_gpu=2,
+    workers_per_gpu=2,
     train=dict(
         type='RepeatDataset',
         times=500,

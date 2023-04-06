@@ -2,7 +2,7 @@ _base_ = [
     '../_base_/models/lawin.py',
     '../_base_/datasets/cityscapes_1024x1024_repeat.py',
     '../_base_/default_runtime.py',
-    '../_base_/schedules/schedule_160k_adamw.py'
+    '../_base_/schedules/schedule_320k_adamw.py'
 ]
 
 # model settings
@@ -12,7 +12,7 @@ model = dict(
     type='EncoderDecoder',
     backbone=dict(
         type='mit_b1',
-        pretrained='/opt/ml/input/pretrained/mit_b1.pth',
+        pretrained='./pretrained/mit_b1.pth',
         style='pytorch'),
     decode_head=dict(
         type='LAWINHead',
