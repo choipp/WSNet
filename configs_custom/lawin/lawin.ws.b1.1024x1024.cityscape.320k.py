@@ -1,5 +1,5 @@
 _base_ = [
-    '../_base_/models/lawin.py',
+    '../_base_/models/lawinws.py',
     '../_base_/datasets/cityscapes_1024x1024_repeat.py',
     '../_base_/default_runtime.py',
     '../_base_/schedules/schedule_320k_adamw.py'
@@ -15,7 +15,7 @@ model = dict(
         pretrained='./pretrained/mit_b1.pth',
         style='pytorch'),
     decode_head=dict(
-        type='LAWINHead',
+        type='LAWINHeadWS',
         in_channels=[64, 128, 320, 512],
         in_index=[0, 1, 2, 3],
         channels=128,
