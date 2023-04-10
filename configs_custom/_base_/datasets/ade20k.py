@@ -1,6 +1,6 @@
 # dataset settings
 dataset_type = 'ADE20KDataset'
-data_root = '/opt/ml/input/data/ADEChallengeData2016'
+data_root = '/content/mmseg_WS/data/ADEChallengeData2016'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 crop_size = (512, 512)
@@ -33,22 +33,22 @@ test_pipeline = [
 ]
 data = dict(
     samples_per_gpu=8,
-    workers_per_gpu=6,
+    workers_per_gpu=4,
     train=dict(
         type=dataset_type,
         data_root=data_root,
-        img_dir='image/train',
-        ann_dir='mask/train',
+        img_dir='images/training',
+        ann_dir='annotations/training',
         pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
         data_root=data_root,
-        img_dir='image/val',
-        ann_dir='mask/val',
+        img_dir='images/validation',
+        ann_dir='annotations/validation',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
         data_root=data_root,
-        img_dir='image/val',
-        ann_dir='mask/val',
+        img_dir='images/validation',
+        ann_dir='annotations/validation',
         pipeline=test_pipeline))
