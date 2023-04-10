@@ -8,7 +8,7 @@ from mmseg.models.builder import HEADS
 from mmseg.models.decode_heads.decode_head import BaseDecodeHead
 from mmseg.models.decode_heads.psp_head import PPM
 
-@HEADS.register_module()
+#@HEADS.register_module()
 class WS(BaseDecodeHead):
     def __init__(self, **kwargs):
         super(WS, self).__init__(input_transform='multiple_select', **kwargs)
