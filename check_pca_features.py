@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from mmseg_custom import *
 from mmseg.apis import init_segmentor, inference_segmentor
 from mmseg.models import build_segmentor
 from mmcv import Config
@@ -174,7 +175,7 @@ def feature_visualize(models, input_image):
         print(model['label'], os.path.dirname(os.path.abspath(__file__)))
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         plt.tight_layout()
-        plt.savefig(os.path.join(BASE_DIR,"results",f"feat_{model['label']}.png"), dpi=300)
+        plt.savefig(os.path.join(BASE_DIR,"results",f"feat_{model['label']}.png"), dpi=600)
         plt.close()
 
         ipython_display(os.path.join(BASE_DIR,"results",f"feat_{model['label']}.png"))
@@ -201,10 +202,10 @@ def feature_visualize(models, input_image):
 
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         plt.tight_layout()
-        plt.savefig(os.path.join(BASE_DIR,"results",f"similar_images_{model['label']}.png"), dpi=300)
+        plt.savefig(os.path.join(BASE_DIR,"results",f"similar_images_{model['label']}.png"), dpi=600)
         plt.close()        
 
-        ipython_display(os.path.join(BASE_DIR,"results",f"similar_images_{model['label']}.png"), dpi=300)
+        ipython_display(os.path.join(BASE_DIR,"results",f"similar_images_{model['label']}.png"))
 
 feature_visualize(models, image_tensor)
 
