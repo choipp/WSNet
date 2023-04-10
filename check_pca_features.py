@@ -122,21 +122,13 @@ models = [
     # Add more models if necessary
 ]
 
-input_tensors = []
-for model in models:
-    reshaped_tensor = process_model(
-        cfg_path=model['cfg_path'],
-        checkpoint_path=model['checkpoint_path'],
-        image_tensor=image_tensor,
-        use_original_hook=model['use_original_hook']
-    )
-    input_tensors.append(reshaped_tensor)
-
 threshold = 1e-5
 
 def feature_visualize(models, input_image):
-    cmap = plt.cm.gray
-    cmap = LinearSegmentedColormap.from_list('black', cmap(np.linspace(1, 0, 256)))    
+    #matplotlib.rcParams['figure.dpi'] = 600  # Set the DPI for the figures
+  
+    #cmap = plt.cm.gray
+    #cmap = LinearSegmentedColormap.from_list('black', cmap(np.linspace(1, 0, 256)))    
 
     # Set plot background color
     matplotlib.rcParams['figure.facecolor'] = 'black'    
@@ -155,7 +147,7 @@ def feature_visualize(models, input_image):
 
         # Visualize filter kernels in a 2x2 grid for each group
         n_rows, n_cols = 16, 16
-        fig = plt.figure(figsize=(16, 16))
+        fig = plt.figure(figsize=(24, 24), constrained_layout=True)
 
         for group_idx, group in enumerate(groups):
             grid = plt.GridSpec(2, 2, wspace=0.1, hspace=0.1)
@@ -169,12 +161,12 @@ def feature_visualize(models, input_image):
                     filter_idx = i * n_cols + j
                     filter_kernel = group[filter_idx].numpy()
                     sub_ax = fig.add_subplot(sub_grid[i, j])
-                    sub_ax.imshow(filter_kernel, cmap=cmap, vmin=-1, vmax=1, interpolation='nearest')
+                    sub_ax.imshow(filter_kernel, cmap='gray', vmin=-1, vmax=1, interpolation='nearest')
                     sub_ax.axis('off')
 
         print(model['label'], os.path.dirname(os.path.abspath(__file__)))
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        plt.tight_layout()
+        #plt.tight_layout()
         plt.savefig(os.path.join(BASE_DIR,"results",f"feat_{model['label']}.png"), dpi=600)
         plt.close()
 
@@ -193,7 +185,7 @@ def feature_visualize(models, input_image):
             similar_images.append(group[indices])
 
         # Visualize the 10 most similar images for each group
-        fig, axs = plt.subplots(4, 10, figsize=(16, 8))
+        fig, axs = plt.subplots(4, 10, figsize=(24, 12))
         for i in range(4):
             for j in range(10):
                 ax = axs[i, j]
@@ -207,7 +199,7 @@ def feature_visualize(models, input_image):
 
         ipython_display(os.path.join(BASE_DIR,"results",f"similar_images_{model['label']}.png"))
 
-feature_visualize(models, image_tensor)
+#feature_visualize(models, image_tensor)
 
 def plot_histogram(models, input_image):
     input_tensors = []
@@ -231,9 +223,11 @@ def plot_histogram(models, input_image):
 
         explained_variance_ratios_per_group = []
         for group in groups:
+            print("group", group.shape)
             explained_variance_ratios = []
             filter_kernel_np = group.numpy().reshape(256, -1)
-            pca = PCA(n_components=256)
+            print("filter_kernel_np", filter_kernel_np.shape)
+            pca = PCA()
             pca.fit(filter_kernel_np)
 
             explained_variance = np.sum(pca.explained_variance_[i] for i in range(1))
@@ -244,6 +238,12 @@ def plot_histogram(models, input_image):
             else:
                 explained_variance_ratios.append(0)
             explained_variance_ratios_per_group.append(explained_variance_ratios)
+
+        print("size : ", pca.explained_variance_ratio_.shape, pca.explained_variance_ratio_ * 100)
+        plt.plot(np.cumsum(pca.explained_variance_ratio_))
+        plt.xlabel('Number of components')
+        plt.ylabel('Explained variance')
+        plt.savefig('elbow_plot.png', dpi=100)
 
         for group_idx, group_ratios in enumerate(explained_variance_ratios_per_group):
             n = len(group_ratios)
