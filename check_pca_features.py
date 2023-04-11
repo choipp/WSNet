@@ -43,7 +43,8 @@ def process_model(cfg_path, checkpoint_path, image_tensor, use_original_hook=Fal
     mean = torch.tensor([123.675, 116.28, 103.53])
     std = torch.tensor([58.395, 57.12, 57.375])
     normalized_image_tensor = (image_tensor - mean[:, None, None]) / std[:, None, None]
-    image_input = normalized_image_tensor.unsqueeze(0)
+    #image_input = normalized_image_tensor.unsqueeze(0)
+    image_input = image_tensor.unsqueeze(0)
 
     if use_original_hook:
         hook = Hook(model.decode_head.fusion_conv)
@@ -160,6 +161,7 @@ def feature_visualize(models, input_image):
                 for j in range(n_cols):
                     filter_idx = i * n_cols + j
                     filter_kernel = group[filter_idx].numpy()
+                    print(f'filter_kernel_{group_idx}_{filter_idx}', filter_kernel.shape)
                     sub_ax = fig.add_subplot(sub_grid[i, j])
                     sub_ax.imshow(filter_kernel, cmap='gray', vmin=-1, vmax=1, interpolation='nearest')
                     sub_ax.axis('off')
@@ -320,5 +322,5 @@ def plot_histogram_2(models, input_image):
     plt.show()
     plt.close()
 
-plot_histogram_2(models, image_tensor)
+#plot_histogram_2(models, image_tensor)
 
