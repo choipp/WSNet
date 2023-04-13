@@ -333,7 +333,7 @@ def plot_histogram_0(models, input_image, n_components):
     ax.set_yticklabels([f'Stage {i}' for i in range(1, 5)], fontsize=14)
     ax.set(ylabel='Features from encoder stages', xlabel='Variance explained by PC1 ~ PC4 [%]')
     ax.set_ylabel(ax.get_ylabel(), fontsize=20)
-    ax.set_xlabel(ax.get_xlabel(), fontsize=20)
+    ax.set_xlabel(ax.get_xlabel(), fontsize=30)
 
     ax.set_ylim(ax.get_ylim()[::-1])  # Reverse the y-axis limits
 
